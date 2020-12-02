@@ -8,9 +8,10 @@
     //   - Si NO la hay, redirigimos a SesionInicioMostrarFormulario.php
     // (Organizar estas comprobaciones en funciones en _Varios.php para evitar copypaste.)
 
-    if (!haySesionIniciada()) {
+    if(!haySesionIniciada()){
         redireccionar("SesionInicioMostrarFormulario.php");
-    } else { ?>
+    }
+     ?>
 
 <html>
 
@@ -36,6 +37,6 @@
 
 </html>
 
-<?php } ?>
+
 
 

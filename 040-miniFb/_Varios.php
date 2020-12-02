@@ -30,60 +30,58 @@ function obtenerPdoConexionBD(): PDO
 
 function obtenerUsuario(string $identificador, string $contrasenna): ?array
 {
-    // TODO Pendiente hacer.
-
     // Conectar con BD
     $pdo = obtenerPdoConexionBD();
 
     //Lanzar consulta
     $sql = "SELECT * FROM Usuario WHERE identificador=? AND contrasenna=?";
     $sentencia = $pdo ->prepare($sql);
-    $sentencia->execute([$identificador, $contrasenna]);
+    $sentencia->execute([$identificador, $contrasenna]); //Parámetros de la consulta
     $usuario = $sentencia->fetchAll();
 
-    //Ver si viene 1 fila o ninguna
     $unaFilaAfectada = ($sentencia->rowCount() == 1);
 
-    // Devolver una cosa u otra para que sepan.
-    if($unaFilaAfectada) {
-        redireccionar("ContenidoPrivado1.php");
-        marcarSesionComoIniciada($usuario[0]);
+    if($unaFilaAfectada){
+        return ["id" => $usuario[0]["id"], "identificador" => $usuario[0]["identificador"], "contrasenna" => $usuario[0]["contrasenna"],
+            "codigoCookie" => $usuario[0]["codigoCookie"], "tipoUsuario" => $usuario[0]["tipoUsuario"], "nombre" => usuario[0]["nombre"],
+            "apellidos" => $usuario[0]["apellidos"]];
     } else {
-        redireccionar("SesionInicioComprobar.php");
+        return null;
     }
 
-    //return $usuario[0];
-    return ["id" => $usuario[0]["id"], "identificador" => $usuario[0]["identificador"], "contrasenna" => $usuario[0]["contrasenna"],
-        "nombre" => $usuario[0]["nombre"], "apellidos" => $usuario[0]["apellidos"]];
 }
 
 function marcarSesionComoIniciada(array $arrayUsuario)
 {
-    // TODO Anotar en el post-it todos estos datos:
 
     $_SESSION["id"] = $arrayUsuario["id"];
     $_SESSION["identificador"] = $arrayUsuario["identificador"];
     $_SESSION["contrasenna"] = $arrayUsuario["contrasenna"];
     $_SESSION["nombre"] = $arrayUsuario["nombre"];
     $_SESSION["apellidos"] = $arrayUsuario["apellidos"];
+    $_SESSION["codigoCookie"] = $arrayUsuario["codigoCookie"];
+    $_SESSION["tipoUsuario"] = $arrayUsuario["tipoUsuario"];
+
 }
 
 function haySesionIniciada(): bool
 {
-    // TODO Pendiente hacer la comprobación.
 
     if(isset($_SESSION["id"])){
-        $sesionIniciada = true;
+        return true;
     } else{
-        $sesionIniciada = false;
+        return false;
     }
 
-    return $sesionIniciada;
+
 }
 
 function cerrarSesion()
 {
-    // TODO session_destroy() y unset de $_SESSION (por si acaso).
+    session_unset();
+    session_destroy();
+
+    redireccionar("SesionInicioMostrarFormulario.php");
 }
 
 // (Esta función no se utiliza en este proyecto pero se deja por si se optimizase el flujo de navegación.)
