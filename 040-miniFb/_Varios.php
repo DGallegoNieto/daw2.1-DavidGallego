@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+session_start();
+
 function obtenerPdoConexionBD(): PDO
 {
     $servidor = "localhost";
@@ -37,37 +39,46 @@ function obtenerUsuario(string $identificador, string $contrasenna): ?array
     $sql = "SELECT * FROM Usuario WHERE identificador=? AND contrasenna=?";
     $sentencia = $pdo ->prepare($sql);
     $sentencia->execute([$identificador, $contrasenna]);
-    $rs = $sentencia->fetchAll();
+    $usuario = $sentencia->fetchAll();
 
     //Ver si viene 1 fila o ninguna
     $unaFilaAfectada = ($sentencia->rowCount() == 1);
 
-    // Devolver una cosa u otra para que sepan (true/false).
+    // Devolver una cosa u otra para que sepan.
     if($unaFilaAfectada) {
-
+        redireccionar("ContenidoPrivado1.php");
+        marcarSesionComoIniciada($usuario[0]);
     } else {
-
+        redireccionar("SesionInicioComprobar.php");
     }
 
-    //return $rs[0];
-    return ["id" => 17, "identificador" => "jlopez"];
+    //return $usuario[0];
+    return ["id" => $usuario[0]["id"], "identificador" => $usuario[0]["identificador"], "contrasenna" => $usuario[0]["contrasenna"],
+        "nombre" => $usuario[0]["nombre"], "apellidos" => $usuario[0]["apellidos"]];
 }
 
 function marcarSesionComoIniciada(array $arrayUsuario)
 {
     // TODO Anotar en el post-it todos estos datos:
-    // $_SESSION["id"] = ...
-    // $_SESSION["identificador"] = ...
-    // ...
+
+    $_SESSION["id"] = $arrayUsuario["id"];
+    $_SESSION["identificador"] = $arrayUsuario["identificador"];
+    $_SESSION["contrasenna"] = $arrayUsuario["contrasenna"];
+    $_SESSION["nombre"] = $arrayUsuario["nombre"];
+    $_SESSION["apellidos"] = $arrayUsuario["apellidos"];
 }
 
-function haySesionIniciada(): boolean
+function haySesionIniciada(): bool
 {
     // TODO Pendiente hacer la comprobación.
 
-    // Está iniciada si isset($_SESSION["id"])
+    if(isset($_SESSION["id"])){
+        $sesionIniciada = true;
+    } else{
+        $sesionIniciada = false;
+    }
 
-    return false;
+    return $sesionIniciada;
 }
 
 function cerrarSesion()
