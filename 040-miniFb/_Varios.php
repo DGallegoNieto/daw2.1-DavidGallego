@@ -27,7 +27,6 @@ function obtenerPdoConexionBD(): PDO
 }
 
 
-
 function obtenerUsuario(string $identificador, string $contrasenna): ?array
 {
     // Conectar con BD
@@ -43,7 +42,7 @@ function obtenerUsuario(string $identificador, string $contrasenna): ?array
 
     if($unaFilaAfectada){
         return ["id" => $usuario[0]["id"], "identificador" => $usuario[0]["identificador"], "contrasenna" => $usuario[0]["contrasenna"],
-            "codigoCookie" => $usuario[0]["codigoCookie"], "tipoUsuario" => $usuario[0]["tipoUsuario"], "nombre" => usuario[0]["nombre"],
+            "codigoCookie" => $usuario[0]["codigoCookie"], "tipoUsuario" => $usuario[0]["tipoUsuario"], "nombre" => $usuario[0]["nombre"],
             "apellidos" => $usuario[0]["apellidos"]];
     } else {
         return null;
@@ -66,14 +65,11 @@ function marcarSesionComoIniciada(array $arrayUsuario)
 
 function haySesionIniciada(): bool
 {
-
     if(isset($_SESSION["id"])){
         return true;
     } else{
         return false;
     }
-
-
 }
 
 function cerrarSesion()
@@ -81,7 +77,7 @@ function cerrarSesion()
     session_unset();
     session_destroy();
 
-    redireccionar("SesionInicioMostrarFormulario.php");
+    redireccionar("ContenidoPublico1.php");
 }
 
 // (Esta función no se utiliza en este proyecto pero se deja por si se optimizase el flujo de navegación.)
