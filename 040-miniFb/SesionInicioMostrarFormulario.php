@@ -25,6 +25,8 @@
     <label>Contraseña: </label><input type="text" name="contrasenna">
     <br />
     <input type="submit" value="Confirmar">
+    <br />
+    <a href='UsuarioFicha.php'>¿No tienes cuenta? ¡Regístrate!</a>
 </form>
 
 

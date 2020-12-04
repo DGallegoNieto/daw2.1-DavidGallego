@@ -18,7 +18,14 @@
 ?>
 
 <html>
-<h1>Editar/Crear usuario</h1>
+<?php
+    if(isset($_SESSION["id"])){
+        echo "<h1>Editar información de usuario</h1>";
+    } else {
+        echo "<h1>Registrar usuario</h1>";
+    }
+?>
+
 <form action="SesionRegistroGuardar.php">
     <label>Identificador: </label><input type="text" name="identificador" value="<?=$identificador?>">
     <br />
