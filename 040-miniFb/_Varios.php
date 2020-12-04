@@ -72,12 +72,26 @@ function haySesionIniciada(): bool
     }
 }
 
+function hayCookieValida()
+{
+    //TODO
+}
+
 function cerrarSesion()
 {
     session_unset();
     session_destroy();
 
-    redireccionar("ContenidoPublico1.php");
+}
+
+function mostrarInfoUsuario()
+{
+    if(haySesionIniciada()){
+        echo "<span><p>Bienvenido, <a href='UsuarioFicha.php'>$_SESSION[nombre]</a>.</p><a href='SesionCerrar.php'>Cerrar sesión</a></span>";
+    } else{
+        echo "<span><a href='SesionInicioMostrarFormulario.php'>Iniciar sesión</a></span>";
+    }
+
 }
 
 // (Esta función no se utiliza en este proyecto pero se deja por si se optimizase el flujo de navegación.)

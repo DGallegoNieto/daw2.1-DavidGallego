@@ -19,10 +19,10 @@ require_once "_Varios.php";
 
 <body>
 
+<?= mostrarInfoUsuario() ?>
+
 <h1>Contenido Privado 2</h1>
 <br />
-<h2>Bienvenido, <?=$_SESSION["nombre"] ?>.</h2>
-<a href="UsuarioFicha.php">Editar información de usuario.</a>
 
 <p>Praesent sit amet tincidunt nibh, quis gravida ligula. Maecenas vel efficitur ipsum, nec scelerisque turpis. Aliquam laoreet massa et augue sodales consequat. Nunc arcu nulla, malesuada interdum nunc sit amet, fermentum condimentum sem. Nam consectetur porttitor fringilla. Pellentesque ligula elit, molestie ac nisi ultricies, commodo porta turpis. Sed nec elit vitae elit pulvinar malesuada id non ex. In vulputate sapien vel auctor condimentum. Aliquam interdum tellus id eros sagittis pulvinar. Quisque sapien ipsum, pellentesque vel tortor vel, vestibulum sollicitudin dui.</p>
 <p>Suspendisse eget pulvinar purus. Curabitur malesuada diam id orci porttitor, at tincidunt dolor fringilla. Duis bibendum nulla id venenatis ornare. Sed tempor auctor suscipit. Duis ut dui dui. Fusce ornare rutrum mi quis viverra. In blandit sodales rhoncus. Nam sodales, mi ut lobortis ornare, est lorem scelerisque dui, imperdiet placerat justo tortor vel ipsum. In placerat justo leo, et maximus mauris molestie in. Duis condimentum eros quis augue dictum consequat. Aliquam tincidunt egestas mollis.</p>
@@ -31,8 +31,7 @@ require_once "_Varios.php";
 <a href='ContenidoPublico1.php'>Ir al Contenido Público 1</a>
 <br/>
 <a href='ContenidoPrivado1.php'>Ir al Contenido Privado 1</a>
-<br/>
-<a href='SesionCerrar.php'>Cerrar sesión</a>
+
 </body>
 
 </html>
