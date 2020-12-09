@@ -2,6 +2,8 @@
     session_start();
 
     $error = isset($_REQUEST["error"]);
+
+    //TODO checkbox de recuerdame para las cookies
 ?>
 
 <html>

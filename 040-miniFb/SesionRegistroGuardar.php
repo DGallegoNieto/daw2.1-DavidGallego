@@ -5,6 +5,7 @@ require_once "_Varios.php";
 $pdo = obtenerPdoConexionBD();
 
 //TODO controlar identificadores repetidos UsuarioFicha.php
+//TODO controlar campos vacíos al crear usuarios
 //TODO cambiar $_REQUEST por $_SESSION
 
 $identificador = $_REQUEST["identificador"];
