@@ -3,7 +3,6 @@
 
     $error = isset($_REQUEST["error"]);
 
-    //TODO checkbox de recuerdame para las cookies
 ?>
 
 <html>
@@ -22,13 +21,14 @@
         echo "<h2>La contraseña no es correcta.</h2>";
     }
 
-    //TODO checkbox de recuérdame para las cookies
 
 ?>
 <form action='SesionInicioComprobar.php' method='get'>
     <label for="identificador">Usuario: </label><input type="text" name="identificador" >
     <br />
     <label for="contrasenna">Contraseña: </label><input type="text" name="contrasenna">
+    <br />
+    <label for="recordar">Recuérdame: </label><input type="checkbox" name="recordar">
     <br />
     <input type="submit" value="Confirmar">
     <br />

@@ -72,9 +72,51 @@ function haySesionIniciada(): bool
     }
 }
 
+function generarCookieRecordar(array $arrayUsuario)
+{
+    $pdo = obtenerPdoConexionBD();
+
+    $codigoCookie = generarCadenaAleatoria(32);
+
+    setcookie("codigoCookie", $codigoCookie, time()+60*60*24);
+    setcookie("identificadorCookie", $arrayUsuario["identificador"], time()+60*60*24);
+
+    $sql = "UPDATE Usuario SET codigoCookie=? WHERE id=?";
+    $sentencia = $pdo ->prepare($sql);
+    $sentencia->execute([$codigoCookie, $arrayUsuario["id"]]); //Parámetros de la consulta
+
+
+    // TODO Para una seguridad óptima convendría anotar en la BD la fecha de caducidad de la cookie y no aceptar ninguna cookie pasada dicha fecha.
+
+    // TODO Enviamos al cliente, en forma de cookies, el identificador y el codigoCookie: setcookie(...) ...
+}
+
+function borrarCookieRecordar($id)
+{
+    $pdo = obtenerPdoConexionBD();
+
+    $sql = "UPDATE Usuario SET codigoCookie=? WHERE id=?";
+    $sentencia = $pdo ->prepare($sql);
+    $sentencia->execute([NULL, $id]); //Parámetros de la consulta
+
+    setcookie("codigoCookie", "", time()-60*60*24);
+    setcookie("identificadorCookie", "", time()+60*60*24);
+
+}
+
 function hayCookieValida()
 {
-    //TODO
+    if(isset($_COOKIE["codigoCookie"])){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function generarCadenaAleatoria(int $longitud): string
+{
+    for ($s = '', $i = 0, $z = strlen($a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')-1; $i != $longitud; $x = rand(0,$z), $s .= $a[$x], $i++);
+    return $s;
 }
 
 function cerrarSesion()

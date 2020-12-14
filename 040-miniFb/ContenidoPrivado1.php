@@ -3,7 +3,12 @@
     require_once "_Varios.php";
 
     //Si no hay sesión iniciada redirecciona al formulario
-    //TODO mirar si viene cookie
+
+
+    if(!hayCookieValida()){
+        //TODO mirar si viene cookie
+    }
+
     if(!haySesionIniciada()){
         redireccionar("SesionInicioMostrarFormulario.php");
     }
