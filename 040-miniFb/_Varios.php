@@ -87,20 +87,14 @@ function generarCookieRecordar(array $arrayUsuario)
 
 
     // TODO Para una seguridad óptima convendría anotar en la BD la fecha de caducidad de la cookie y no aceptar ninguna cookie pasada dicha fecha.
-
     // TODO Enviamos al cliente, en forma de cookies, el identificador y el codigoCookie: setcookie(...) ...
 }
 
-function borrarCookieRecordar($id)
+function borrarCookieRecordar()
 {
-    $pdo = obtenerPdoConexionBD();
-
-    $sql = "UPDATE Usuario SET codigoCookie=? WHERE id=?";
-    $sentencia = $pdo ->prepare($sql);
-    $sentencia->execute([NULL, $id]); //Parámetros de la consulta
 
     setcookie("codigoCookie", "", time()-60*60*24);
-    setcookie("identificadorCookie", "", time()+60*60*24);
+    setcookie("identificadorCookie", "", time()-60*60*24);
 
 }
 
@@ -113,10 +107,50 @@ function hayCookieValida()
     }
 }
 
-function generarCadenaAleatoria(int $longitud): string
+function intentarCanjearSesionCookie(): bool
 {
-    for ($s = '', $i = 0, $z = strlen($a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')-1; $i != $longitud; $x = rand(0,$z), $s .= $a[$x], $i++);
-    return $s;
+    // TODO ¿Ha venido un registro? (Igual que el inicio de sesión)
+    //     · Entonces, se la canjeamos por una SESIÓN RAM INICIADA: marcarSesionComoIniciada($arrayUsuario)
+    //     · Además, RENOVAMOS (re-creamos) la cookie.
+
+
+    if(isset($_COOKIE["codigoCookie"]) && isset($_COOKIE["identificadorCookie"])){
+
+        $pdo = obtenerPdoConexionBD();
+
+        $sql = "SELECT * FROM Usuario WHERE identificador=? AND codigoCookie=?";
+        $sentencia = $pdo ->prepare($sql);
+        $sentencia->execute([$_COOKIE["identificadorCookie"], $_COOKIE["codigoCookie"]]); //Parámetros de la consulta
+        $usuario = $sentencia->fetchAll();
+
+        $unaFilaAfectada = ($sentencia->rowCount() == 1);
+
+        if($unaFilaAfectada){
+            $_SESSION["id"] = $usuario[0]["id"];
+            $_SESSION["identificador"] = $usuario[0]["identificador"];
+            $_SESSION["contrasenna"] = $usuario[0]["contrasenna"];
+            $_SESSION["nombre"] = $usuario[0]["nombre"];
+            $_SESSION["apellidos"] = $usuario[0]["apellidos"];
+            $_SESSION["codigoCookie"] = $usuario[0]["codigoCookie"];
+            $_SESSION["tipoUsuario"] = $usuario[0]["tipoUsuario"];
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        borrarCookieRecordar();
+        return false;
+    }
+}
+
+function mostrarInfoUsuario()
+{
+    if(haySesionIniciada()){
+        echo "<span><p>Bienvenido, <a href='UsuarioFicha.php'>$_SESSION[nombre] $_SESSION[apellidos]</a>.</p><a href='SesionCerrar.php'>Cerrar sesión</a></span>";
+    } else{
+        echo "<span><a href='SesionInicioMostrarFormulario.php'>Iniciar sesión</a></span>";
+    }
+
 }
 
 function cerrarSesion()
@@ -126,14 +160,10 @@ function cerrarSesion()
 
 }
 
-function mostrarInfoUsuario()
+function generarCadenaAleatoria(int $longitud): string
 {
-    if(haySesionIniciada()){
-        echo "<span><p>Bienvenido, <a href='UsuarioFicha.php'>$_SESSION[nombre]</a>.</p><a href='SesionCerrar.php'>Cerrar sesión</a></span>";
-    } else{
-        echo "<span><a href='SesionInicioMostrarFormulario.php'>Iniciar sesión</a></span>";
-    }
-
+    for ($s = '', $i = 0, $z = strlen($a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')-1; $i != $longitud; $x = rand(0,$z), $s .= $a[$x], $i++);
+    return $s;
 }
 
 // (Esta función no se utiliza en este proyecto pero se deja por si se optimizase el flujo de navegación.)

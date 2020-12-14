@@ -5,11 +5,12 @@
     //Si no hay sesión iniciada redirecciona al formulario
 
 
-    if(!hayCookieValida()){
+    if(hayCookieValida()){
         //TODO mirar si viene cookie
+
     }
 
-    if(!haySesionIniciada()){
+    if(!haySesionIniciada() && !intentarCanjearSesionCookie()){
         redireccionar("SesionInicioMostrarFormulario.php");
     }
 ?>
