@@ -92,7 +92,7 @@ function generarCookieRecordar(array $arrayUsuario)
 
 function borrarCookieRecordar()
 {
-
+    //TODO borrar cookie BD
     setcookie("codigoCookie", "", time()-60*60*24);
     setcookie("identificadorCookie", "", time()-60*60*24);
 
