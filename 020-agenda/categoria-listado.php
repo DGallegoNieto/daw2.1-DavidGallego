@@ -1,13 +1,8 @@
 <?php
 	require_once "_varios.php";
+	require_once  "dao.php";
 
-	$pdo = obtenerPdoConexionBD();
-	
-	$sql = "SELECT id, nombre FROM categoria ORDER BY nombre";
-
-    $select = $pdo->prepare($sql);
-    $select->execute([]); // Array vacío porque la consulta preparada no requiere parámetros.
-    $rs = $select->fetchAll();
+    $categorias = DAO::categoriaObtenerTodas();
 ?>
 
 
@@ -31,7 +26,7 @@
 	</tr>
 
 	<?php
-        foreach ($rs as $fila) { ?>
+        foreach ($categorias as $fila) { ?>
 			<tr>
 				<td><a href="categoria-ficha.php?id=<?=$fila["id"]?>"> <?=$fila["nombre"] ?> </a></td>
 				<td><a href="categoria-eliminar.php?id=<?=$fila["id"]?>"> (X) </a></td>
