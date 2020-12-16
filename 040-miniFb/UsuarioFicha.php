@@ -8,7 +8,7 @@
         $contrasenna = $_SESSION["contrasenna"];
         $nombre = $_SESSION["nombre"];
         $apellidos = $_SESSION["apellidos"];
-    } else {
+    } else { //Si no existe sesión, es decir, si es un usuario nuevo
         $identificador = "";
         $contrasenna = "";
         $nombre = "";
@@ -24,6 +24,14 @@
     } else {
         echo "<h1>Registrar usuario</h1>";
     }
+
+    if(isset($_REQUEST["errorContrasenna"]) && !isset($_SESSION["id"])){
+        echo "<h1>ERROR. El campo de contraseña no puede estar vacío.</h1>";
+    }
+
+    if(isset($_REQUEST["errorIdentificador"]) && !isset($_SESSION["id"])){
+        echo "<h1>ERROR. Ya existe un usuario con ese identificador. Pruebe con otro.</h1>";
+}
 ?>
 
 <form action="SesionRegistroGuardar.php">
