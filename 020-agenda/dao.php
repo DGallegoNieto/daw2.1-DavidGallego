@@ -37,14 +37,19 @@ private static function ejecutarConsulta(string $sql, array $parametros): array
     return $select->fetchAll();
 }
 
-private static function ejecutarActualizacion(string $sql, array $parametros): void
-{
-    if (!isset(self::$pdo)) self::$pdo = self::obtenerPdoConexionBd();
+    public static function ejecutarActualizacion(string $sql, array $parametros): bool
+    {
+        if (!isset(self::$pdo)) self::$pdo = self::obtenerPdoConexionBd();
 
-    $actualizacion = self::$pdo->prepare($sql);
-    $actualizacion->execute($parametros);
-}
+        $actualizacion = self::$pdo->prepare($sql);
+        $sqlConExito = $actualizacion->execute($parametros);
 
+        $unaFilaAfectada = ($actualizacion->rowCount() == 1);
+
+        $correcto = ($sqlConExito && $unaFilaAfectada);
+
+        return $correcto;
+    }
 
 public static function categoriaObtenerTodas(): array
 {
@@ -58,9 +63,12 @@ public static function categoriaObtenerTodas(): array
     return $datos;
 }
 
-    public static function agregarCategoria($nombre){
-        self::ejecutarActualizacion("INSERT INTO categoria (nombre) VALUES (?);", [$nombre]);
-    }
+
+
+public static function agregarCategoria($nombre)
+{
+    self::ejecutarActualizacion("INSERT INTO categoria (nombre) VALUES (?);", [$nombre]);
+}
 }
 
 

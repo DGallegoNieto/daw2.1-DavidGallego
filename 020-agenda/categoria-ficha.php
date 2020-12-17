@@ -1,5 +1,6 @@
 <?php
 	require_once "_varios.php";
+	require_once "dao.php";
 
 	$pdo = obtenerPdoConexionBD();
 	
