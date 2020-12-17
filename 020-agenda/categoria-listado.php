@@ -26,10 +26,10 @@
 	</tr>
 
 	<?php
-        foreach ($categorias as $fila) { ?>
+        foreach ($categorias as $categoria) { ?>
 			<tr>
-				<td><a href="categoria-ficha.php?id=<?=$fila["id"]?>"> <?=$fila["nombre"] ?> </a></td>
-				<td><a href="categoria-eliminar.php?id=<?=$fila["id"]?>"> (X) </a></td>
+				<td><a href="categoria-ficha.php?id=<?=$categoria->getId()?>"> <?=$categoria->getNombre() ?> </a></td>
+				<td><a href="categoria-eliminar.php?id=<?=$categoria->getId()?>"> (X) </a></td>
 			</tr>
 	<?php } ?>
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once "claseCategoria.php";
+require_once "clases.php";
 
 class DAO{
 
@@ -49,7 +49,7 @@ private static function ejecutarActualizacion(string $sql, array $parametros): v
 public static function categoriaObtenerTodas(): array
 {
     $datos = [];
-    $rs = self::ejecutarConsulta("SELECT id, nombre FROM categoria ORDER BY nombre", []);
+    $rs = self::ejecutarConsulta("SELECT * FROM categoria ORDER BY nombre", []);
 
     foreach ($rs as $fila) {
         $categoria = new Categoria($fila["id"], $fila["nombre"]);
