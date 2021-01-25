@@ -37,7 +37,7 @@ private static function ejecutarConsulta(string $sql, array $parametros): array
     return $select->fetchAll();
 }
 
-    public static function ejecutarActualizacion(string $sql, array $parametros): bool
+public static function ejecutarActualizacion(string $sql, array $parametros): bool
     {
         if (!isset(self::$pdo)) self::$pdo = self::obtenerPdoConexionBd();
 

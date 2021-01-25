@@ -6,7 +6,7 @@
 
 
     if(hayCookieValida()){
-        //TODO mirar si viene cookie
+        intentarCanjearSesionCookie();
 
     }
 

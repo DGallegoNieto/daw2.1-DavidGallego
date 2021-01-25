@@ -3,6 +3,7 @@
 	require_once  "dao.php";
 
     $categorias = DAO::categoriaObtenerTodas();
+
 ?>
 
 
