@@ -1,17 +1,31 @@
 <?php
 
-// TODO ...$_REQUEST["..."]...
+require_once "_com/_Varios.php";
+require_once "_com/DAO.php";
 
-// TODO Intentar crear (añadir funciones en Varios.php para crear y tal).
-//
-// TODO Y redirigir a donde sea.
 
-$arrayUsuario = crearUsuario($identificador, $contrasenna, ....);
+$identificador = $_REQUEST["identificador"];
+$contrasenna = $_REQUEST["contrasenna"];
+$contrasenna2 = $_REQUEST["contrasenna2"];
+$nombre = $_REQUEST["nombre"];
+$apellidos = $_REQUEST["apellidos"];
 
-// TODO ¿Excepciones?
-
-if ($arrayUsuario) {
-
-} else {
-
+//Si las contraseñas no coinciden
+if($contrasenna != $contrasenna2){
+    redireccionar("UsuarioNuevoFormulario.php?datosErroneos");
 }
+
+//Si ya existe un usuario con ese identificador
+if(DAO::buscaUsuarioIdentificador($identificador) == 1){
+    redireccionar("UsuarioNuevoFormulario.php?identificadorErroneo");
+}
+
+
+$usuarioCreado = DAO::crearUsuario($identificador, $contrasenna, $nombre, $apellidos);
+
+if($usuarioCreado == 1){
+    redireccionar("SesionInicioFormulario.php");
+} else {
+    redireccionar("UsuarioNuevoFormulario.php?datosErroneos");
+}
+

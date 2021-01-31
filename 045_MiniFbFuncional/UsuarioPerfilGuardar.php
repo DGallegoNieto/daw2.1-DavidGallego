@@ -1,17 +1,34 @@
 <?php
 
-// TODO ...$_REQUEST["..."]...
+require_once "_com/_Varios.php";
+require_once "_com/DAO.php";
 
-// TODO Intentar guardar (añadir funciones en Varios.php para crear y tal).
 
-// TODO Y redirigir a donde sea.
+$id = $_SESSION["id"];
+$identificador = $_REQUEST["identificador"];
+$nombre = $_REQUEST["nombre"];
+$apellidos = $_REQUEST["apellidos"];
 
-$correcto = actualizarUsuarioEnBD($arrayUsuario);
+$contrasennaNueva = $_REQUEST["contrasennaNueva"];
+$contrasennaNueva2 = $_REQUEST["contrasennaNueva2"];
 
-// TODO ¿Excepciones?
 
-if ($correcto) {
-
-} else {
-
+//Si el identificador que recibe existe en la base de datos y es diferente del de la sesión
+if(DAO::buscaUsuarioIdentificador($identificador) == 1 && $identificador != $_SESSION["identificador"]){
+    redireccionar("UsuarioPerfilVer.php?identificadorErroneo");
 }
+
+//Si las contraseñas no coinciden
+if($contrasennaNueva != $contrasennaNueva2){
+    redireccionar("UsuarioPerfilVer.php?contrasennaErronea");
+}
+
+$correcto = DAO::actualizarUsuarioEnBd($id, $identificador, $nombre, $apellidos, $contrasennaNueva);
+
+if($correcto){
+    redireccionar("MuroVerDe.php?id=" . $id . "&&exito");
+} else {
+    redireccionar("UsuarioPerfilVer.php?error");
+}
+
+

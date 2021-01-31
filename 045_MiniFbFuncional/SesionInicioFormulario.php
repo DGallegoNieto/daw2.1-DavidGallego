@@ -1,5 +1,5 @@
 <?php
-    require_once "_Varios.php";
+    require_once "_com/_Varios.php";
 
     if (haySesionRamIniciada()) redireccionar("MuroVerGlobal.php");
 
@@ -37,7 +37,7 @@
     <input type='submit' value='Iniciar Sesión'>
 </form>
 
-<p>O, si no tienes una cuenta aún, <a href='UsuarioNuevoCrear.php'>créala aquí</a>.</p>
+<p>O, si no tienes una cuenta aún, <a href='UsuarioNuevoFormulario.php'>créala aquí</a></p>
 
 </body>
 

@@ -1,14 +1,15 @@
 <?php
 
-require_once "_Varios.php";
+    require_once "_com/_Varios.php";
+    require_once "_com/DAO.php";
 
-$arrayUsuario = obtenerUsuarioPorContrasenna($_REQUEST["identificador"], $_REQUEST["contrasenna"]);
+$usuario = DAO::obtenerUsuarioPorContrasenna($_REQUEST["identificador"], $_REQUEST["contrasenna"]);
 
-if ($arrayUsuario) { // Identificador existía y contraseña era correcta.
-    establecerSesionRam($arrayUsuario);
+if ($usuario != null) { // Identificador existía y contraseña era correcta.
+    establecerSesionRam($usuario);
 
     if (isset($_REQUEST["recordar"])) {
-        establecerSesionCookie($arrayUsuario);
+        DAO::establecerSesionCookie($usuario);
     }
 
     redireccionar("MuroVerGlobal.php");

@@ -1,6 +1,6 @@
 <?php
 
-    require_once "_Varios.php";
+    require_once "_com/_Varios.php";
 
 ?>
 
