@@ -1,8 +1,6 @@
 <?php
-    require_once "_com/_varios.php";
-    require_once "_com/dao.php";
-
-	$pdo = obtenerPdoConexionBD();
+	require_once "_com/_varios.php";
+	require_once "_com/dao.php";
 	
 	// Se recoge el parámetro "id" de la request.
 	$id = (int)$_REQUEST["id"];
@@ -15,14 +13,8 @@
 	if ($nueva_entrada) { // Quieren CREAR una nueva entrada, así que no se cargan datos.
 		$categoria_nombre = "<introduzca nombre>";
 	} else { // Quieren VER la ficha de una categoría existente, cuyos datos se cargan.
-		$sql = "SELECT nombre FROM categoria WHERE id=?";
+        $categoria = DAO::categoriaObtenerPorId($id);
 
-        $select = $pdo->prepare($sql);
-        $select->execute([$id]); // Se añade el parámetro a la consulta preparada.
-        $rs = $select->fetchAll();
-		
-		 // Con esto, accedemos a los datos de la primera (y esperemos que única) fila que haya venido.
-		$categoria_nombre = $rs[0]["nombre"];
 	}
 ?>
 
@@ -51,7 +43,7 @@
 <ul>
 	<li>
 		<strong>Nombre: </strong>
-		<input type="text" name="nombre" value="<?=$categoria_nombre?>" />
+		<input type="text" name="nombre" value="<?=$categoria->getNombre()?>" />
 	</li>
 </ul>
 

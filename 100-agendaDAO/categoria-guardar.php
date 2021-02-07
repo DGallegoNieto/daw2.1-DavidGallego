@@ -2,8 +2,6 @@
     require_once "_com/_varios.php";
     require_once "_com/dao.php";
 
-	$pdo = obtenerPdoConexionBD();
-
 	// Se recogen los datos del formulario de la request.
 	$id = (int)$_REQUEST["id"];
 	$nombre = $_REQUEST["nombre"];
@@ -15,11 +13,11 @@
 	
 	if ($nueva_entrada) {
 		// Quieren CREAR una nueva entrada, así que es un INSERT.
-        $correcto = DAO::ejecutarActualizacion("INSERT INTO categoria (nombre) VALUES (?)", [$nombre]);
+        $correcto = DAO::categoriaCrear($nombre);
 
 	} else {
 		// Quieren MODIFICAR una categoría existente y es un UPDATE.
-        $correcto = DAO::ejecutarActualizacion("UPDATE categoria SET nombre=? WHERE id=?", [$nombre, $id]);
+        $correcto = DAO::categoriaModificar($id, $nombre);
 
  	}
 

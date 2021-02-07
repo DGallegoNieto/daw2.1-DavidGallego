@@ -2,12 +2,11 @@
 	require_once "_com/_varios.php";
 	require_once "_com/dao.php";
 
-	$pdo = obtenerPdoConexionBD();
 
 	// Se recoge el parámetro "id" de la request.
 	$id = (int)$_REQUEST["id"];
 
-    $sqlConExito = DAO::ejecutarActualizacion("DELETE FROM categoria WHERE id=?", [$id]);
+    $sqlConExito = DAO::categoriaEliminarPorId($id);
 
 ?>
 
