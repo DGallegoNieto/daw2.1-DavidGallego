@@ -28,36 +28,60 @@ function cargarTodasLasCategorias() {
     request.send();
 }
 
-function clickCrearCategoria() {
-    // Recoger datos del form.
-    // Limpiar los datos en el form: .clear()
-    // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
-    // Recoger la respuesta del request. Vendrá un objeto categoría.
-    // Llamar con ese objeto a insertarCategoria(categoria);
-}
+    function clickCrearCategoria() {
+        var nombreCategoria = document.getElementById("nombre").value;
 
-function insertarCategoria(categoria) {
-    // TODO Que la categoría se inserte en el lugar que le corresponda según un orden alfabético.
-    // Usar esto: https://www.w3schools.com/jsref/met_node_insertbefore.asp
+        var request = new XMLHttpRequest();
 
-    var tr = document.createElement("tr");
-    var td = document.createElement("td");
-    var a = document.createElement("a");
-    a.setAttribute("href","CategoriaFicha.php?id=" + categoria.id);
-    var textoContenido = document.createTextNode(categoria.nombre);
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                xhttp.open("POST", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
+                xhttp.send();
 
-    a.appendChild(textoContenido);
-    td.appendChild(a);
-    tr.appendChild(td);
-    tablaCategorias.appendChild(tr);
-}
+                var categoria = JSON.parse(this.responseText);
+                insertarCategoria(categoria);
 
-function eliminarCategoria(id) {
-    // TODO Pendiente de hacer.
-}
+            }
 
-function modificarCategoria(categoria) {
-    // TODO Pendiente de hacer.
-}
+            // Recoger datos del form.
+            // Limpiar los datos en el form: .clear()
+            // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
+            // Recoger la respuesta del request. Vendrá un objeto categoría.
+            // Llamar con ese objeto a insertarCategoria(categoria);
+        }
+    }
+
+    function insertarCategoria(categoria) {
+        // TODO Que la categoría se inserte en el lugar que le corresponda según un orden alfabético.
+        // Usar esto: https://www.w3schools.com/jsref/met_node_insertbefore.asp
+        var tr = document.createElement("tr");
+        var tdNombre = document.createElement("td");
+        var tdEliminar = document.createElement("td");
+        var aNombre = document.createElement("a");
+        aNombre.setAttribute("href", "CategoriaFicha.php?id=" + categoria.id);
+        var aEliminar = document.createElement("a");
+        aEliminar.setAttribute("href", "CategoriaEliminar.php?id=" + categoria.id);
+        var textoNombre = document.createTextNode(categoria.nombre);
+        var textoEliminar = document.createTextNode("(X)");
+
+
+        aNombre.appendChild(textoNombre);
+        tdNombre.appendChild(aNombre);
+        aEliminar.appendChild(textoEliminar);
+        tdEliminar.appendChild(aEliminar);
+        tr.appendChild(tdNombre);
+        tr.appendChild(tdEliminar);
+        tablaCategorias.appendChild(tr);
+    }
+
+    function eliminarCategoria(id) {
+        // TODO Pendiente de hacer.
+        //¿Es necesario hacerlo aquí?
+    }
+
+    function modificarCategoria(categoria) {
+        // TODO Pendiente de hacer.
+    }
+
 
 // TODO Actualizar lo local si actualizan el servidor. Poner timestamp de modificación en la tabla y pedir categoriaObtenerModificadasDesde(timestamp)
