@@ -45,7 +45,7 @@ function cargarTodasLasCategorias() {
             // Recoger la respuesta del request. Vendrá un objeto categoría.
             // Llamar con ese objeto a insertarCategoria(categoria);
         };
-        request.open("POST", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
+        request.open("GET", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
         request.send();
     }
 
@@ -62,7 +62,7 @@ function cargarTodasLasCategorias() {
         bEliminar.setAttribute("class", "botonEliminar");
         bEliminar.addEventListener("click", eliminarCategoria);
         var textoNombre = document.createTextNode(categoria.nombre);
-        var textoEliminar = document.createTextNode("(X)");
+        var textoEliminar = document.createTextNode("X");
 
 
         aNombre.appendChild(textoNombre);
@@ -83,7 +83,7 @@ function cargarTodasLasCategorias() {
                 document.getElementById(id).parentNode.parentNode.remove();
             }
         };
-        request.open("POST", "CategoriaEliminar.php?id=" + id, true);
+        request.open("GET", "CategoriaEliminar.php?id=" + id, true);
         request.send();
 
     }
