@@ -110,7 +110,7 @@ class DAO
 
     public static function categoriaEliminarPorId($id): bool {
 
-        return self::ejecutarActualizacion("DELETE FROM categoria WHERE id=?", [$id]);
+        return self::ejecutarActualizacion("DELETE FROM Categoria WHERE id=?", [$id]);
 
     }
 }

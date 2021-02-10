@@ -5,5 +5,5 @@
 
     $categoria = DAO::categoriaEliminarPorId($id);
 
-    redireccionar("Agenda.html");
+    echo $categoria;
 ?>

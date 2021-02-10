@@ -35,20 +35,18 @@ function cargarTodasLasCategorias() {
 
         request.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                xhttp.open("POST", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
-                xhttp.send();
-
                 var categoria = JSON.parse(this.responseText);
                 insertarCategoria(categoria);
 
             }
-
             // Recoger datos del form.
             // Limpiar los datos en el form: .clear()
             // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
             // Recoger la respuesta del request. Vendrá un objeto categoría.
             // Llamar con ese objeto a insertarCategoria(categoria);
-        }
+        };
+        request.open("POST", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
+        request.send();
     }
 
     function insertarCategoria(categoria) {
@@ -59,24 +57,35 @@ function cargarTodasLasCategorias() {
         var tdEliminar = document.createElement("td");
         var aNombre = document.createElement("a");
         aNombre.setAttribute("href", "CategoriaFicha.php?id=" + categoria.id);
-        var aEliminar = document.createElement("a");
-        aEliminar.setAttribute("href", "CategoriaEliminar.php?id=" + categoria.id);
+        var bEliminar = document.createElement("button");
+        bEliminar.setAttribute("id", categoria.id);
+        bEliminar.setAttribute("class", "botonEliminar");
+        bEliminar.addEventListener("click", eliminarCategoria);
         var textoNombre = document.createTextNode(categoria.nombre);
         var textoEliminar = document.createTextNode("(X)");
 
 
         aNombre.appendChild(textoNombre);
         tdNombre.appendChild(aNombre);
-        aEliminar.appendChild(textoEliminar);
-        tdEliminar.appendChild(aEliminar);
+        bEliminar.appendChild(textoEliminar);
+        tdEliminar.appendChild(bEliminar);
         tr.appendChild(tdNombre);
         tr.appendChild(tdEliminar);
         tablaCategorias.appendChild(tr);
     }
 
-    function eliminarCategoria(id) {
-        // TODO Pendiente de hacer.
-        //¿Es necesario hacerlo aquí?
+    function eliminarCategoria(e) {
+        var id = e.target.id;
+        var request = new XMLHttpRequest();
+
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById(id).parentNode.parentNode.remove();
+            }
+        };
+        request.open("POST", "CategoriaEliminar.php?id=" + id, true);
+        request.send();
+
     }
 
     function modificarCategoria(categoria) {
