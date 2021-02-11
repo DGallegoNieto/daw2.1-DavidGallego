@@ -113,4 +113,8 @@ class DAO
         return self::ejecutarActualizacion("DELETE FROM Categoria WHERE id=?", [$id]);
 
     }
+
+    public static  function categoriaModificar($id, string $nombre): bool{
+        return self::ejecutarActualizacion("UPDATE Categoria SET nombre=? WHERE id=?", [$nombre, $id]);
+    }
 }

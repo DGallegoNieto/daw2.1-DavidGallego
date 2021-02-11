@@ -13,6 +13,14 @@
     .botonEliminar:hover{
         background-color: darkred;
     }
+
+    .categoriaNombre{
+        color:blue;
+        text-decoration: underline;
+    }
+    .categoriaNombre:hover{
+        color:darkblue;
+    }
 </style>
 
 <body>
@@ -22,17 +30,16 @@
 <h2 id='pantalla'>Categorías</h2>
 
 
-<form>
 
-    <input type='text' id='nombre' placeholder='<nombre de la categoría>' value='' />
-    <label for='nombre'>Nombre</label>
+<input type='text' id='nombre' placeholder='<nombre de la categoría>' value='' />
+<label for='nombre'>Nombre</label>
 
-    <br>
+<br>
 
-    <input type='submit' id='submitCrearCategoria' value='Crear categoría' />
+<input type='submit' id='submitCrearCategoria' value='Crear categoría' />
 
-</form>
-
+<br>
+<br>
 
 <table border='1' id='tablaCategorias'>
     <tr>
@@ -40,6 +47,7 @@
     </tr>
 </table>
 
+<p id="prueba"></p>
 </body>
 
 </html>
