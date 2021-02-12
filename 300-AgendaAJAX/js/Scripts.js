@@ -140,31 +140,27 @@ function ordenarTabla() {
     var table, rows, switching, i, x, y, shouldSwitch;
     table = document.getElementById("tablaCategorias");
     switching = true;
-    /*Make a loop that will continue until
-    no switching has been done:*/
+    /*Hace que el bucle continue hasta que no se haga ningun cambio*/
     while (switching) {
-        //start by saying: no switching is done:
+        //Empieza diciendo que no se ha hecho ningun cambio
         switching = false;
         rows = table.rows;
-        /*Loop through all table rows (except the
-        first, which contains table headers):*/
+        /*Recorre todas las filas excepto la primera que contiene los titulos*/
         for (i = 1; i < (rows.length - 1); i++) {
-            //start by saying there should be no switching:
+            //Empieza diciendo que no debe haber ningun cambio
             shouldSwitch = false;
-            /*Get the two elements you want to compare,
-            one from current row and one from the next:*/
+            /*Recoge los dos elementos a comparar, uno de la fila actual y otro de la siguiente*/
             x = rows[i].getElementsByTagName("TD")[0];
             y = rows[i + 1].getElementsByTagName("TD")[0];
-            //check if the two rows should switch place:
+            //Comprueba si las filas deben cambiar de lugar
             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                //if so, mark as a switch and break the loop:
+                //Si deben de cambiar, lo marca y acaba el bucle
                 shouldSwitch = true;
                 break;
             }
         }
         if (shouldSwitch) {
-            /*If a switch has been marked, make the switch
-            and mark that a switch has been done:*/
+            /*Si se ha marcado que debe haber un cambio, lo hace y marca que se ha hecho el cambio*/
             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
         }
