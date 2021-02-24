@@ -1,14 +1,17 @@
 window.onload = inicializaciones;
-var tablaCategorias;
-// TODO ¿Útil para mantener un control de eliminaciones, etc.?     var categorias;
 
+var tablaCategorias;
+var tablaPersonas;
 
 
 function inicializaciones() {
     tablaCategorias = document.getElementById("tablaCategorias");
+    tablaPersonas = document.getElementById("tablaPersonas");
+
     document.getElementById('submitCrearCategoria').addEventListener('click', clickCrearCategoria)
 
     cargarTodasLasCategorias();
+    cargarTodasLasPersonas();
 }
 
 function cargarTodasLasCategorias() {
@@ -28,113 +31,112 @@ function cargarTodasLasCategorias() {
     request.send();
 }
 
-    function clickCrearCategoria() {
-        var nombreCategoria = document.getElementById("nombre").value;
+function clickCrearCategoria() {
+    var nombreCategoria = document.getElementById("nombre").value;
 
-        if(nombreCategoria != ""){
-            var request = new XMLHttpRequest();
+    if(nombreCategoria != ""){
+        var request = new XMLHttpRequest();
 
-            request.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var categoria = JSON.parse(this.responseText);
-                    insertarCategoria(categoria);
-                    document.getElementById("nombre").value = "";
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var categoria = JSON.parse(this.responseText);
+                insertarCategoria(categoria);
+                document.getElementById("nombre").value = "";
 
-                }
-                // Recoger datos del form.
-                // Limpiar los datos en el form: .clear()
-                // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
-                // Recoger la respuesta del request. Vendrá un objeto categoría.
-                // Llamar con ese objeto a insertarCategoria(categoria);
-            };
-            request.open("GET", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
-            request.send();
+            }
+            // Recoger datos del form.
+            // Limpiar los datos en el form: .clear()
+            // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
+            // Recoger la respuesta del request. Vendrá un objeto categoría.
+            // Llamar con ese objeto a insertarCategoria(categoria);
+        };
+        request.open("GET", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
+        request.send();
+    }
+
+}
+
+function insertarCategoria(categoria) {
+
+    var tr = document.createElement("tr");
+    tr.setAttribute("id", categoria.id);
+    var tdNombre = document.createElement("td");
+    var tdEliminar = document.createElement("td");
+    var pNombre = document.createElement("p");
+    pNombre.setAttribute("class", "categoriaNombre");
+    pNombre.addEventListener("click", clickModificarCategoria);
+    var bEliminar = document.createElement("button");
+    bEliminar.setAttribute("class", "botonEliminar");
+    bEliminar.addEventListener("click", eliminarCategoria);
+    var textoNombre = document.createTextNode(categoria.nombre);
+    var textoEliminar = document.createTextNode("X");
+
+    pNombre.appendChild(textoNombre);
+    tdNombre.appendChild(pNombre);
+    bEliminar.appendChild(textoEliminar);
+    tdEliminar.appendChild(bEliminar);
+    tr.appendChild(tdNombre);
+    tr.appendChild(tdEliminar);
+    tablaCategorias.appendChild(tr);
+
+    ordenarTabla();
+}
+
+function eliminarCategoria(e) {
+    var id = e.target.parentNode.parentNode.id;
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById(id).remove();
         }
+    };
+    request.open("GET", "CategoriaEliminar.php?id=" + id, true);
+    request.send();
 
-    }
+}
 
-    function insertarCategoria(categoria) {
-        // TODO Que la categoría se inserte en el lugar que le corresponda según un orden alfabético.
-        // Usar esto: https://www.w3schools.com/jsref/met_node_insertbefore.asp
-        var tr = document.createElement("tr");
-        tr.setAttribute("id", categoria.id);
-        var tdNombre = document.createElement("td");
-        var tdEliminar = document.createElement("td");
-        var pNombre = document.createElement("p");
-        pNombre.setAttribute("class", "categoriaNombre");
-        pNombre.addEventListener("click", clickModificarCategoria);
-        var bEliminar = document.createElement("button");
-        bEliminar.setAttribute("class", "botonEliminar");
-        bEliminar.addEventListener("click", eliminarCategoria);
-        var textoNombre = document.createTextNode(categoria.nombre);
-        var textoEliminar = document.createTextNode("X");
+function clickModificarCategoria(e) {
+    var id = e.target.parentNode.parentNode.id;
+    var input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("value", e.target.innerText);
+    input.setAttribute("id", "input"+id);
+    input.addEventListener("blur", modificarCategoria);
 
-        pNombre.appendChild(textoNombre);
-        tdNombre.appendChild(pNombre);
-        bEliminar.appendChild(textoEliminar);
-        tdEliminar.appendChild(bEliminar);
-        tr.appendChild(tdNombre);
-        tr.appendChild(tdEliminar);
-        tablaCategorias.appendChild(tr);
+    e.target = e.target.parentNode.replaceChild(input, e.target);
+    document.getElementById("input"+id).focus();
 
-        ordenarTabla();
-    }
+}
 
-    function eliminarCategoria(e) {
-        var id = e.target.parentNode.parentNode.id;
-        var request = new XMLHttpRequest();
+function modificarCategoria(e){
+    var id = e.target.parentNode.parentNode.id;
 
-        request.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById(id).remove();
-            }
-        };
-        request.open("GET", "CategoriaEliminar.php?id=" + id, true);
-        request.send();
+    var pNombre = document.createElement("p");
+    pNombre.setAttribute("class", "categoriaNombre");
+    pNombre.addEventListener("click", clickModificarCategoria);
 
-    }
+    var nombreNuevo = document.getElementById(e.target.id).value;
 
-    function clickModificarCategoria(e) {
-        var id = e.target.parentNode.parentNode.id;
-        var input = document.createElement("input");
-        input.setAttribute("type", "text");
-        input.setAttribute("value", e.target.innerText);
-        input.setAttribute("id", "input"+id);
-        input.addEventListener("blur", modificarCategoria);
+    var request = new XMLHttpRequest();
 
-        e.target = e.target.parentNode.replaceChild(input, e.target);
-        document.getElementById("input"+id).focus();
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var pNombre = document.createElement("p");
+            pNombre.setAttribute("class", "categoriaNombre");
+            pNombre.addEventListener("click", clickModificarCategoria);
+            var textoNombre = document.createTextNode(nombreNuevo);
 
-    }
+            pNombre.appendChild(textoNombre);
+            e.target = e.target.parentNode.replaceChild(pNombre, e.target);
 
-    function modificarCategoria(e){
-        var id = e.target.parentNode.parentNode.id;
+            ordenarTabla();
+        }
+    };
+    request.open("GET", "CategoriaModificar.php?nombre=" + nombreNuevo + "&id="+ id, true);
+    request.send();
 
-        var pNombre = document.createElement("p");
-        pNombre.setAttribute("class", "categoriaNombre");
-        pNombre.addEventListener("click", clickModificarCategoria);
-
-        var nombreNuevo = document.getElementById(e.target.id).value;
-
-        var request = new XMLHttpRequest();
-
-        request.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var pNombre = document.createElement("p");
-                pNombre.setAttribute("class", "categoriaNombre");
-                pNombre.addEventListener("click", clickModificarCategoria);
-                var textoNombre = document.createTextNode(nombreNuevo);
-
-                pNombre.appendChild(textoNombre);
-                e.target = e.target.parentNode.replaceChild(pNombre, e.target);
-
-                ordenarTabla();
-            }
-        };
-        request.open("GET", "CategoriaModificar.php?nombre=" + nombreNuevo + "&id="+ id, true);
-        request.send();
-
-    }
+}
 
 function ordenarTabla() {
     var table, rows, switching, i, x, y, shouldSwitch;
@@ -167,5 +169,52 @@ function ordenarTabla() {
     }
 }
 
+/*------------------------------------------Personas--------------------------------------------------------------------------------*/
 
-// TODO Actualizar lo local si actualizan el servidor. Poner timestamp de modificación en la tabla y pedir categoriaObtenerModificadasDesde(timestamp)
+function cargarTodasLasPersonas(){
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var personas = JSON.parse(this.responseText);
+
+            for (var i = 0; i < personas.length; i++) {
+                insertarPersona(personas[i]);
+            }
+        }
+    };
+
+    request.open("GET", "PersonaObtenerTodas.php");
+    request.send();
+}
+
+
+function insertarPersona(persona){
+    var tr = document.createElement("tr");
+    tr.setAttribute(persona.id);
+
+    var tdNombre = document.createElement("td");
+    var pNombre = document.createElement("p");
+    pNombre.appendChild(document.createTextNode(persona.nombre));
+    var tdApellidos = document.createElement("td");
+    var pApellidos = document.createElement("p");
+    pApellidos.appendChild(document.createTextNode(persona.apellidos));
+    var tdTelefono = document.createElement("td");
+    var pTelefono = document.createElement("p");
+    pTelefono.appendChild(document.createTextNode(persona.telefono));
+    var tdCategoriaId = document.createElement("td");
+    var pCategoriaId = document.createElement("p");
+    pCategoriaId.appendChild(document.createTextNode(persona.categoriaId));
+
+    tdNombre.appendChild(pNombre);
+    tdApellidos.appendChild(pApellidos);
+    tdTelefono.appendChild(pTelefono);
+    tdCategoriaId.appendChild(pCategoriaId);
+
+    tr.appendChild(tdNombre);
+    tr.appendChild(tdApellidos);
+    tr.appendChild(tdTelefono);
+    tr.appendChild(tdCategoriaId);
+
+    tablaPersonas.appendChild(tr);
+}
