@@ -44,11 +44,6 @@ function clickCrearCategoria() {
                 document.getElementById("nombre").value = "";
 
             }
-            // Recoger datos del form.
-            // Limpiar los datos en el form: .clear()
-            // Crear un XMLHttpRequest. Enviar en la URL los datos de la categoria: CategoriaCrear.php?nombre=blablabla
-            // Recoger la respuesta del request. Vendrá un objeto categoría.
-            // Llamar con ese objeto a insertarCategoria(categoria);
         };
         request.open("GET", "CategoriaCrear.php?nombre=" + nombreCategoria, true);
         request.send();
@@ -75,11 +70,13 @@ function insertarCategoria(categoria) {
     tdNombre.appendChild(pNombre);
     bEliminar.appendChild(textoEliminar);
     tdEliminar.appendChild(bEliminar);
+
     tr.appendChild(tdNombre);
     tr.appendChild(tdEliminar);
+
     tablaCategorias.appendChild(tr);
 
-    ordenarTabla();
+    ordenarTabla(tablaCategorias);
 }
 
 function eliminarCategoria(e) {
@@ -130,7 +127,7 @@ function modificarCategoria(e){
             pNombre.appendChild(textoNombre);
             e.target = e.target.parentNode.replaceChild(pNombre, e.target);
 
-            ordenarTabla();
+            ordenarTabla(tablaCategorias);
         }
     };
     request.open("GET", "CategoriaModificar.php?nombre=" + nombreNuevo + "&id="+ id, true);
@@ -138,9 +135,9 @@ function modificarCategoria(e){
 
 }
 
-function ordenarTabla() {
+function ordenarTabla(tabla) {
     var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("tablaCategorias");
+    table = tabla;
     switching = true;
     /*Hace que el bucle continue hasta que no se haga ningun cambio*/
     while (switching) {
@@ -191,7 +188,7 @@ function cargarTodasLasPersonas(){
 
 function insertarPersona(persona){
     var tr = document.createElement("tr");
-    tr.setAttribute(persona.id);
+    tr.setAttribute("id", persona.id);
 
     var tdNombre = document.createElement("td");
     var pNombre = document.createElement("p");
@@ -206,15 +203,63 @@ function insertarPersona(persona){
     var pCategoriaId = document.createElement("p");
     pCategoriaId.appendChild(document.createTextNode(persona.categoriaId));
 
+    var tdEditar = document.createElement("td");
+    var bEditar = document.createElement("button");
+    bEditar.appendChild(document.createTextNode("Editar"));
+    bEditar.setAttribute("class", "botonEditar");
+    bEditar.addEventListener("click", editarPersona);
+
+    var tdEliminar = document.createElement("td");
+    var bEliminar = document.createElement("button");
+    bEliminar.appendChild(document.createTextNode("X"));
+    bEliminar.setAttribute("class", "botonEliminar");
+    bEliminar.addEventListener("click", eliminarPersona);
+
+
     tdNombre.appendChild(pNombre);
     tdApellidos.appendChild(pApellidos);
     tdTelefono.appendChild(pTelefono);
     tdCategoriaId.appendChild(pCategoriaId);
+    tdEditar.appendChild(bEditar);
+    tdEliminar.appendChild(bEliminar);
 
     tr.appendChild(tdNombre);
     tr.appendChild(tdApellidos);
     tr.appendChild(tdTelefono);
     tr.appendChild(tdCategoriaId);
+    tr.appendChild(tdEditar);
+    tr.appendChild(tdEliminar);
 
     tablaPersonas.appendChild(tr);
+}
+
+function eliminarPersona(e){
+    var id = e.target.parentNode.parentNode.id;
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById(id).remove();
+        }
+    };
+    request.open("GET", "PersonaEliminar.php?id=" + id, true);
+    request.send();
+}
+
+function editarPersona(e){
+    var id = e.target.parentNode.parentNode.id;
+
+    var fila = document.getElementById(id);
+
+    alert(id + " " + fila.childElementCount);
+    /*
+    for(var i = 0; i < fila.childElementCount; i++){
+        var input = document.createElement("input");
+        input.setAttribute("value", fila.children[i].innerHTML);
+        fila.children[i] = input;
+
+    }
+    */
+
+
 }

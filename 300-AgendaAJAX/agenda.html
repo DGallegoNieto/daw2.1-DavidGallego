@@ -21,6 +21,14 @@
     .categoriaNombre:hover{
         color:darkblue;
     }
+
+    .botonEditar{
+        background-color:green;
+        color:white;
+    }
+    .botonEditar:hover{
+        background-color:darkgreen;
+    }
 </style>
 
 <body>
@@ -30,9 +38,9 @@
 <h2 id='pantalla'>Categorías</h2>
 
 
-
-<input type='text' id='nombre' placeholder='<nombre de la categoría>' value='' />
 <label for='nombre'>Nombre</label>
+<input type='text' id='nombre' placeholder='<nombre de la categoría>' value='' />
+
 
 <br>
 
@@ -49,6 +57,23 @@
 
 
 <h2>Personas</h2>
+
+<label for='nombrePersona'>Nombre</label>
+<input type='text' id='nombrePersona' placeholder='<nombre de la persona>' value='' />
+<br>
+<label for='apellidosPersona'>Apellidos</label>
+<input type='text' id='apellidosPersona' placeholder='<apellidos de la persona>' value='' />
+<br>
+<label for='telefonoPersona'>Telefono</label>
+<input type='text' id='telefonoPersona' placeholder='<telefono de la persona>' value='' />
+<br>
+<label for='categoriaIdPersona'>CategoriaId</label>
+<input type='text' id='categoriaIdPersona' placeholder='<categoria de la persona>' value='' />
+<br>
+<input type='submit' id='submitCrearPersona' value='Crear persona' />
+<br>
+<br>
+
 
 <table border="1" id="tablaPersonas">
     <tr>

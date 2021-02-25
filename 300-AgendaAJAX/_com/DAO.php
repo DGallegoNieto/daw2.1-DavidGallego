@@ -117,4 +117,33 @@ class DAO
     public static  function categoriaModificar($id, string $nombre): bool{
         return self::ejecutarActualizacion("UPDATE Categoria SET nombre=? WHERE id=?", [$nombre, $id]);
     }
+
+    /* PERSONAS */
+    private static function personaCrearDesdeRs(array $fila): Persona
+    {
+        return new Persona($fila["id"], $fila["nombre"], $fila["apellidos"], $fila["telefono"], $fila["estrella"], $fila["categoriaId"]);
+    }
+
+    public static function personaObtenerTodas(): array
+    {
+        $datos = [];
+
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM Persona ORDER BY nombre",
+            []
+        );
+
+        foreach ($rs as $fila) {
+            $persona = self::personaCrearDesdeRs($fila);
+            array_push($datos, $persona);
+        }
+
+        return $datos;
+    }
+
+    public static function personaEliminarPorId($id): bool {
+
+        return self::ejecutarActualizacion("DELETE FROM Persona WHERE id=?", [$id]);
+
+    }
 }

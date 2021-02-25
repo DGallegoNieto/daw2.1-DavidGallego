@@ -5,5 +5,5 @@
 
     $categoria = DAO::categoriaEliminarPorId($id);
 
-    echo $categoria;
+    //echo $categoria;
 ?>
