@@ -8,7 +8,8 @@ function inicializaciones() {
     tablaCategorias = document.getElementById("tablaCategorias");
     tablaPersonas = document.getElementById("tablaPersonas");
 
-    document.getElementById('submitCrearCategoria').addEventListener('click', clickCrearCategoria)
+    document.getElementById('submitCrearCategoria').addEventListener('click', clickCrearCategoria);
+    document.getElementById('submitCrearPersona').addEventListener('click', clickCrearPersona);
 
     cargarTodasLasCategorias();
     cargarTodasLasPersonas();
@@ -135,36 +136,7 @@ function modificarCategoria(e){
 
 }
 
-function ordenarTabla(tabla) {
-    var table, rows, switching, i, x, y, shouldSwitch;
-    table = tabla;
-    switching = true;
-    /*Hace que el bucle continue hasta que no se haga ningun cambio*/
-    while (switching) {
-        //Empieza diciendo que no se ha hecho ningun cambio
-        switching = false;
-        rows = table.rows;
-        /*Recorre todas las filas excepto la primera que contiene los titulos*/
-        for (i = 1; i < (rows.length - 1); i++) {
-            //Empieza diciendo que no debe haber ningun cambio
-            shouldSwitch = false;
-            /*Recoge los dos elementos a comparar, uno de la fila actual y otro de la siguiente*/
-            x = rows[i].getElementsByTagName("TD")[0];
-            y = rows[i + 1].getElementsByTagName("TD")[0];
-            //Comprueba si las filas deben cambiar de lugar
-            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                //Si deben de cambiar, lo marca y acaba el bucle
-                shouldSwitch = true;
-                break;
-            }
-        }
-        if (shouldSwitch) {
-            /*Si se ha marcado que debe haber un cambio, lo hace y marca que se ha hecho el cambio*/
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-        }
-    }
-}
+
 
 /*------------------------------------------Personas--------------------------------------------------------------------------------*/
 
@@ -207,7 +179,7 @@ function insertarPersona(persona){
     var bEditar = document.createElement("button");
     bEditar.appendChild(document.createTextNode("Editar"));
     bEditar.setAttribute("class", "botonEditar");
-    bEditar.addEventListener("click", editarPersona);
+    bEditar.addEventListener("click", clickModificarPersona);
 
     var tdEliminar = document.createElement("td");
     var bEliminar = document.createElement("button");
@@ -231,6 +203,35 @@ function insertarPersona(persona){
     tr.appendChild(tdEliminar);
 
     tablaPersonas.appendChild(tr);
+
+    ordenarTabla(tablaPersonas);
+}
+
+function clickCrearPersona(){
+    var nombre = document.getElementById("nombrePersona").value;
+    var apellidos = document.getElementById("apellidosPersona").value;
+    var telefono = document.getElementById("telefonoPersona").value;
+    var categoriaId = document.getElementById("categoriaIdPersona").value;
+
+    var request = new XMLHttpRequest();
+
+    if(nombre != "" && apellidos != "" && telefono != "" && categoriaId != ""){
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var persona = JSON.parse(this.responseText);
+                insertarPersona(persona);
+                document.getElementById("nombrePersona").value = "";
+                document.getElementById("apellidosPersona").value = "";
+                document.getElementById("nombrePersona").value = "";
+                document.getElementById("nombrePersona").value = "";
+
+            }
+        };
+        request.open("GET", "PersonaCrear.php?nombre="+nombre+"&apellidos="+apellidos+"&telefono="+telefono+"&categoriaId="+categoriaId, true);
+        request.send();
+    }
+
+
 }
 
 function eliminarPersona(e){
@@ -246,20 +247,115 @@ function eliminarPersona(e){
     request.send();
 }
 
-function editarPersona(e){
+function clickModificarPersona(e){
     var id = e.target.parentNode.parentNode.id;
 
     var fila = document.getElementById(id);
 
-    alert(id + " " + fila.childElementCount);
-    /*
-    for(var i = 0; i < fila.childElementCount; i++){
+
+    for(var i = 0; i < fila.childElementCount - 2; i++){
         var input = document.createElement("input");
-        input.setAttribute("value", fila.children[i].innerHTML);
-        fila.children[i] = input;
-
+        input.setAttribute("value", fila.children[i].textContent);
+        var td = document.createElement("td");
+        td.appendChild(input);
+        e.target.parentNode.parentNode.replaceChild(td, fila.children[i]);
     }
-    */
+
+    var bConfirmar = document.createElement("button");
+    bConfirmar.appendChild(document.createTextNode("Confirmar"));
+    bConfirmar.addEventListener("click", modificarPersona);
+    bConfirmar.setAttribute("class", "botonConfirmar");
+    var tdConfirmar = document.createElement("td");
+    tdConfirmar.appendChild(bConfirmar);
+
+    e.target.parentNode.parentNode.replaceChild(tdConfirmar, fila.children[fila.childElementCount - 2]);
 
 
+
+}
+
+function modificarPersona(e){
+    var id = e.target.parentNode.parentNode.id;
+
+    var fila = document.getElementById(id);
+
+    var nombre = fila.children[0].children[0].value;
+    var apellidos = fila.children[1].children[0].value;
+    var telefono = fila.children[2].children[0].value;
+    var categoriaId = fila.children[3].children[0].value;
+
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var pNombre = document.createElement("p");
+            pNombre.appendChild(document.createTextNode(nombre));
+            var pApellidos = document.createElement("p");
+            pApellidos.appendChild(document.createTextNode(apellidos));
+            var pTelefono = document.createElement("p");
+            pTelefono.appendChild(document.createTextNode(telefono));
+            var pCategoriaId = document.createElement("p");
+            pCategoriaId.appendChild(document.createTextNode(categoriaId));
+
+            var tdEditar = document.createElement("td");
+            var bEditar = document.createElement("button");
+            bEditar.appendChild(document.createTextNode("Editar"));
+            bEditar.setAttribute("class", "botonEditar");
+            bEditar.addEventListener("click", clickModificarPersona);
+
+            var tdNombre = document.createElement("td");
+            var tdApellidos = document.createElement("td");
+            var tdTelefono = document.createElement("td");
+            var tdCategoriaId = document.createElement("td");
+
+            tdNombre.appendChild(pNombre);
+            tdApellidos.appendChild(pApellidos);
+            tdTelefono.appendChild(pTelefono);
+            tdCategoriaId.appendChild(pCategoriaId);
+            tdEditar.appendChild(bEditar);
+
+            e.target.parentNode.parentNode.replaceChild(tdNombre, fila.children[0]);
+            e.target.parentNode.parentNode.replaceChild(tdApellidos, fila.children[1]);
+            e.target.parentNode.parentNode.replaceChild(tdTelefono, fila.children[2]);
+            e.target.parentNode.parentNode.replaceChild(tdCategoriaId, fila.children[3]);
+            e.target.parentNode.parentNode.replaceChild(tdEditar, fila.children[4]);
+
+            ordenarTabla(tablaPersonas);
+        }
+    };
+    request.open("GET", "PersonaModificar.php?id="+id+"&nombre="+nombre+"&apellidos="+apellidos+"&telefono="+telefono+"&categoriaId="+categoriaId , true);
+    request.send();
+}
+
+/*------------------------------------------Otros--------------------------------------------------------------------------------*/
+
+function ordenarTabla(tabla) {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = tabla;
+    switching = true;
+    /*Hace que el bucle continue hasta que no se haga ningun cambio*/
+    while (switching) {
+        //Empieza diciendo que no se ha hecho ningun cambio
+        switching = false;
+        rows = table.rows;
+        /*Recorre todas las filas excepto la primera que contiene los titulos*/
+        for (i = 1; i < (rows.length - 1); i++) {
+            //Empieza diciendo que no debe haber ningun cambio
+            shouldSwitch = false;
+            /*Recoge los dos elementos a comparar, uno de la fila actual y otro de la siguiente*/
+            x = rows[i].getElementsByTagName("TD")[0];
+            y = rows[i + 1].getElementsByTagName("TD")[0];
+            //Comprueba si las filas deben cambiar de lugar
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                //Si deben de cambiar, lo marca y acaba el bucle
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            /*Si se ha marcado que debe haber un cambio, lo hace y marca que se ha hecho el cambio*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
 }

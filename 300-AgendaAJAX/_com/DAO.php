@@ -114,7 +114,7 @@ class DAO
 
     }
 
-    public static  function categoriaModificar($id, string $nombre): bool{
+    public static  function categoriaModificar(int $id, string $nombre): bool{
         return self::ejecutarActualizacion("UPDATE Categoria SET nombre=? WHERE id=?", [$nombre, $id]);
     }
 
@@ -122,6 +122,16 @@ class DAO
     private static function personaCrearDesdeRs(array $fila): Persona
     {
         return new Persona($fila["id"], $fila["nombre"], $fila["apellidos"], $fila["telefono"], $fila["estrella"], $fila["categoriaId"]);
+    }
+
+    public static function personaObtenerPorId(int $id): ?Persona
+    {
+        $rs = self::ejecutarConsulta(
+            "SELECT * FROM Persona WHERE id=?",
+            [$id]
+        );
+        if ($rs) return self::personaCrearDesdeRs($rs[0]);
+        else return null;
     }
 
     public static function personaObtenerTodas(): array
@@ -145,5 +155,19 @@ class DAO
 
         return self::ejecutarActualizacion("DELETE FROM Persona WHERE id=?", [$id]);
 
+    }
+
+    public static  function personaModificar(int $id, string $nombre, string $apellidos, string $telefono, string $categoriaId): bool{
+        return self::ejecutarActualizacion("UPDATE Persona SET nombre=?, apellidos=?, telefono=?, categoriaId=? WHERE id=?", [$nombre, $apellidos, $telefono, $categoriaId, $id]);
+    }
+
+    public static function personaCrear(string $nombre, string $apellidos, string $telefono, string $categoriaId): Persona
+    {
+        $idAutogenerado = self::ejecutarActualizacion(
+            "INSERT INTO Persona (nombre, apellidos, telefono, estrella, categoriaId) VALUES (?, ?, ?, 0, ?)",
+            [$nombre, $apellidos, $telefono, $categoriaId]
+        );
+
+        return self::personaObtenerPorId($idAutogenerado);
     }
 }
